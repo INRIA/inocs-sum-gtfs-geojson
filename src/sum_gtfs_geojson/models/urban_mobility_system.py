@@ -9,6 +9,7 @@ from pathlib import Path
 import geopandas as gpd
 from shapely.geometry import Point, LineString
 
+
 class UrbanMobilitySystem(SumGtfsBaseModel):
     """
     Represents an integrated urban mobility system, combining public transport,
@@ -20,10 +21,14 @@ class UrbanMobilitySystem(SumGtfsBaseModel):
         ridership: Observed passenger activity at public transport stops, inflow and outflow.
         bike_trips: Individual shared-bike trips with spatial and temporal metadata.
     """
-    public_transport: GTFSNetwork = Field(..., description="GTFS-defined public transport network.")
-    bike_stations: List[StationInfoStatus] = Field(..., description="Custom GBFS Bike sharing station infrastructure metadata, with status (inventory...) over time periods.")
-    ridership: List[Ridership] = Field(..., description="Passenger activity at transit stops (e.g., boardings).")
-    bike_trips: List[BikeTrip] = Field(..., description="Trip-level data from bike sharing systems.")
+    public_transport: GTFSNetwork = Field(
+        ..., description="GTFS-defined public transport network.")
+    bike_stations: List[StationInfoStatus] = Field(
+        ..., description="Custom GBFS Bike sharing station infrastructure metadata, with status (inventory...) over time periods.")
+    ridership: List[Ridership] = Field(
+        ..., description="Passenger activity at transit stops (e.g., boardings).")
+    bike_trips: List[BikeTrip] = Field(
+        ..., description="Trip-level data from bike sharing systems.")
 
     def save_to_geojson(self, output_path: str = "data/output/geojson"):
         """
@@ -36,9 +41,12 @@ class UrbanMobilitySystem(SumGtfsBaseModel):
         # Save each layer as a separate GeoJSON file
         self.stations_to_geojson(os.path.join(output_path, "stations.geojson"))
         self.routes_to_geojson(os.path.join(output_path, "routes.geojson"))
-        self.bike_stations_to_geojson(os.path.join(output_path, "bike_stations.geojson"))
-        self.ridership_to_geojson(os.path.join(output_path, "ridership.geojson"))
-        self.bike_trips_to_geojson(os.path.join(output_path, "bike_trips.geojson"))
+        self.bike_stations_to_geojson(os.path.join(
+            output_path, "bike_stations.geojson"))
+        self.ridership_to_geojson(os.path.join(
+            output_path, "ridership.geojson"))
+        self.bike_trips_to_geojson(os.path.join(
+            output_path, "bike_trips.geojson"))
 
     def stations_to_geojson(self, filepath):
         """
@@ -70,10 +78,13 @@ class UrbanMobilitySystem(SumGtfsBaseModel):
             return
         gdf = gpd.GeoDataFrame(
             [s.model_dump() for s in self.bike_stations],
-            geometry=[Point(s.lon, s.lat) for s in self.bike_stations if s.lon is not None and s.lat is not None],
+            geometry=[Point(s.lon, s.lat)
+                      for s in self.bike_stations if s.lon is not None and s.lat is not None],
             crs="EPSG:4326"
         )
         gdf.to_file(filepath, driver="GeoJSON")
+
+        return gdf
 
     def ridership_to_geojson(self, filepath):
         """
@@ -86,7 +97,8 @@ class UrbanMobilitySystem(SumGtfsBaseModel):
             return
         gdf = gpd.GeoDataFrame(
             [r.model_dump() for r in self.ridership],
-            geometry=[Point(r.stop_lon, r.stop_lat) for r in self.ridership if r.stop_lon is not None and r.stop_lat is not None],
+            geometry=[Point(r.stop_lon, r.stop_lat)
+                      for r in self.ridership if r.stop_lon is not None and r.stop_lat is not None],
             crs="EPSG:4326"
         )
         gdf.to_file(filepath, driver="GeoJSON")
@@ -98,7 +110,7 @@ class UrbanMobilitySystem(SumGtfsBaseModel):
             filepath (str): The path to the output GeoJSON file.
         """
         print("Exporting bike trips to GeoJSON...")
-        
+
         if not self.bike_trips:
             return
         # This assumes BikeTrip has latitude_start, longitude_start, latitude_end, longitude_end

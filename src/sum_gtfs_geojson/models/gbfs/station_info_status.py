@@ -1,6 +1,5 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
 from typing import List
-from datetime import datetime
 from . import StationStatusPeriod, StationInfo
 
 
@@ -17,4 +16,5 @@ class StationInfoStatus(StationInfo):
         history (List[StationStatusPeriod]): Chronologically ordered list of status snapshots
             representing the station's inventory (bikes/docks) over periods of time.
     """
-    history: List[StationStatusPeriod] = Field(..., description="List of status records over periods of time.")
+    history: List[StationStatusPeriod] = Field(
+        ..., description="List of status records over periods of time.")

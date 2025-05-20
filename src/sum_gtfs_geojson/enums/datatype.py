@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+
 class DataType(Enum):
     STOPS = auto()
     ITINERARIES = auto()

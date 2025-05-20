@@ -2,6 +2,7 @@ from typing import Optional
 from pydantic import Field
 from .. import SumGtfsBaseModel
 
+
 class StopTime(SumGtfsBaseModel):
     """
     Represents a single stop time for a trip in the GTFS feed.

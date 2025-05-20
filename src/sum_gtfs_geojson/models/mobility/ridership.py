@@ -1,6 +1,7 @@
 from pydantic import Field
 from .. import SumGtfsBaseModel
 
+
 class Ridership(SumGtfsBaseModel):
     """
     Represents passenger activity data at a specific transit stop and time slot.
@@ -9,7 +10,7 @@ class Ridership(SumGtfsBaseModel):
     along with contextual information like the line, stop location, time, and whether
     the data is filtered or finalized. It can be used for operational analysis, planning,
     or visualization of public transit usage patterns.
-    
+
     Attributes:
         date (str): Date of observation in YYYY-MM-DD format.
         timeslot (str): Time window when the observation was made (e.g., "07:00-08:00").

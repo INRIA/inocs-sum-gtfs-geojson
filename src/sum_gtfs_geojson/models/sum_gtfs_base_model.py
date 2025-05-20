@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class SumGtfsBaseModel(BaseModel):
     """
     Base class for all GTFS models, providing shared utility methods.

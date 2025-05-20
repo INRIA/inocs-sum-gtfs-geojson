@@ -2,6 +2,7 @@ from pydantic import Field, HttpUrl, constr
 from typing import Optional
 from .. import SumGtfsBaseModel
 
+
 class Stop(SumGtfsBaseModel):
     """
     Represents a physical location where passengers board or alight from vehicles.

@@ -1,6 +1,7 @@
-from pydantic import  Field, HttpUrl, constr
+from pydantic import Field, HttpUrl, constr
 from typing import Optional
 from .. import SumGtfsBaseModel
+
 
 class Trip(SumGtfsBaseModel):
     """

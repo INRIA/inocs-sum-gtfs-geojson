@@ -1,5 +1,6 @@
 from .. import SumGtfsBaseModel
 
+
 class StationStatus(SumGtfsBaseModel):
     """
     Real-time status of a single bike station.

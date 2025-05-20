@@ -2,6 +2,7 @@ from pydantic import Field, HttpUrl, constr
 from typing import Optional
 from .. import SumGtfsBaseModel
 
+
 class Agency(SumGtfsBaseModel):
     """
     Represents a public transport agency that provides transit services.

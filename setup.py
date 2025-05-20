@@ -13,7 +13,7 @@ setup(
     name="sum_gtfs_geojson",
     version="0.1.0",
     author="Rebeca MURILLO",
-    description="Public transport GTFS and Shared Urban Mobility data manager. GTFS parser and a GeoJSON exporter.", 
+    description="Public transport GTFS and Shared Urban Mobility data manager. GTFS parser and a GeoJSON exporter.",
     packages=find_packages(),
     ext_modules=ext_modules,
     install_requires=[

@@ -1,6 +1,7 @@
-from pydantic import  Field
+from pydantic import Field
 from typing import List, Optional
 from .. import SumGtfsBaseModel
+
 
 class StationInfo(SumGtfsBaseModel):
     """

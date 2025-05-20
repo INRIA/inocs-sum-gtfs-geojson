@@ -2,6 +2,7 @@ from datetime import datetime
 from .. import SumGtfsBaseModel
 from pydantic import field_validator
 
+
 class BikeTrip(SumGtfsBaseModel):
     """
     Represents a single bike-sharing trip made by a user or rental.
@@ -45,4 +46,3 @@ class BikeTrip(SumGtfsBaseModel):
         if isinstance(value, str) and value.endswith(" UTC"):
             value = value.replace(" UTC", "")
         return datetime.fromisoformat(value)
-    
