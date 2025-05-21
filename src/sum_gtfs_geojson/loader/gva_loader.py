@@ -16,14 +16,6 @@ RIDERSHIP_FILE_PATH = "data/living_labs/geneva/mobility/ridership_2024.csv"
 BIKE_TRIPS_FILE_PATH = "data/living_labs/geneva/mobility/shared_bikes_trips.csv"
 
 
-def clean_datetime(dt_str):
-    # Remove ' UTC' and microseconds if present
-    dt_str = dt_str.replace(' UTC', '')
-    if '.' in dt_str:
-        dt_str = dt_str.split('.')[0]
-    return datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
-
-
 def safe_get(row, key, default=None, dtype=None):
     val = row.get(key, default)
     if pd.isna(val):
@@ -37,6 +29,9 @@ def safe_get(row, key, default=None, dtype=None):
 
 
 class GenevaLoader(AbstractLoader):
+    def __init__(self, restrict_country_boundaries: bool = True):
+        super().__init__("CHE", restrict_country_boundaries)
+
     def load_stops(self):
         """ Load GTFS stops from the GTFS data file
         Geneva headers in file :
@@ -51,12 +46,17 @@ class GenevaLoader(AbstractLoader):
         stops = []
         for _, row in public_transport_stations.iterrows():
             try:
+                stop_lat = safe_get(row, "stop_lat", None, float)
+                stop_lon = safe_get(row, "stop_lon", None, float)
+                if (not self.position_is_valid(stop_lat, stop_lon)):
+                    continue
+
                 stops.append(
                     Stop(
                         stop_id=safe_get(row, "stop_id", ""),
                         stop_name=safe_get(row, "stop_name", ""),
-                        stop_lat=safe_get(row, "stop_lat", None, float),
-                        stop_lon=safe_get(row, "stop_lon", None, float),
+                        stop_lat=stop_lat,
+                        stop_lon=stop_lon,
                         stop_desc=safe_get(row, "stop_desc", None),
                         zone_id=safe_get(row, "zone_id", None),
                         stop_url=safe_get(row, "stop_url", None),
@@ -200,12 +200,16 @@ class GenevaLoader(AbstractLoader):
         bike_stations = []
         for _, row in shared_bikes_stations.iterrows():
             try:
+                lat = safe_get(row, "latitude", None, float)
+                lon = safe_get(row, "longitude", None, float)
+                if (not self.position_is_valid(lat, lon)):
+                    continue
                 bike_stations.append(
                     StationInfoStatus(
                         station_id=safe_get(row, "name", ""),
                         name=safe_get(row, "name", ""),
-                        lat=safe_get(row, "latitude", None, float),
-                        lon=safe_get(row, "longitude", None, float),
+                        lat=lat,
+                        lon=lon,
                         short_name="",
                         address="",
                         capacity=None,
@@ -237,6 +241,10 @@ class GenevaLoader(AbstractLoader):
         ridership_data = []
         for _, row in public_transport_ridership.iterrows():
             try:
+                stop_lat = safe_get(row, "Stop Latitudes", None, float)
+                stop_lon = safe_get(row, "Stop Longtitudes", None, float)
+                if (not self.position_is_valid(stop_lat, stop_lon)):
+                    continue
                 ridership_data.append(
                     Ridership(
                         date=safe_get(row, "Date", "", str),
@@ -254,9 +262,8 @@ class GenevaLoader(AbstractLoader):
                         day_label=safe_get(row, "jour_semaine", ""),
                         week_index=safe_get(row, "Week Index", 0, int),
                         month_year=safe_get(row, "Month Year", "", str),
-                        stop_lat=safe_get(row, "Stop Latitudes", None, float),
-                        stop_lon=safe_get(
-                            row, "Stop Longtitudes", None, float),
+                        stop_lat=stop_lat,
+                        stop_lon=stop_lon,
                         is_final=bool(safe_get(row, "Final Data", False)),
                         is_filtered=bool(safe_get(row, "filter_graph", False)),
                     )
