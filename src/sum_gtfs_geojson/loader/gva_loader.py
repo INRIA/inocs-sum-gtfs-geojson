@@ -29,8 +29,29 @@ def safe_get(row, key, default=None, dtype=None):
 
 
 class GenevaLoader(AbstractLoader):
-    def __init__(self, restrict_country_boundaries: bool = True):
-        super().__init__("CHE", restrict_country_boundaries)
+    _COUNTRY_A3_CODE = "CHE"
+    _COUNTRY_NAME = "Switzerland"
+    _COUNTRY_ISO_CODE = "CH"
+    _CITY_CENTER = (46.202778, 6.15)
+    _CITY_NAME = "Geneva"
+
+    @property
+    def COUNTRY_A3_CODE(self): return self.__class__._COUNTRY_A3_CODE
+
+    @property
+    def COUNTRY_NAME(self): return self.__class__._COUNTRY_NAME
+
+    @property
+    def COUNTRY_ISO_CODE(self): return self.__class__._COUNTRY_ISO_CODE
+
+    @property
+    def CITY_CENTER(self): return self.__class__._CITY_CENTER
+
+    @property
+    def CITY_NAME(self): return self.__class__._CITY_NAME
+
+    def __init__(self, restrict_country_boundaries: bool = True, distance_radius_km: float = None):
+        super().__init__(self.COUNTRY_A3_CODE, restrict_country_boundaries, distance_radius_km)
 
     def load_stops(self):
         """ Load GTFS stops from the GTFS data file

@@ -11,6 +11,7 @@ class SharedMobilityManager:
                  data_types: list[DataType] = None,
                  geojson_output_path: str = None,
                  restrict_country_boundaries: bool = False,
+                 distance_radius_km: float = None,
                  ):
         """
         Initialize the SharedMobilityManager with a specific city.        
@@ -20,9 +21,11 @@ class SharedMobilityManager:
             data_types (list[DataType], optional): List of data types to load. If None, all data types will be loaded. Defaults to None.
             geojson_output_path (str, optional): The path where the GeoJSON files will be saved. If None, a default path will be used data/geojson/{city_name}. Defaults to None.
             include_country_border_crossing (bool, optional): Flag to restrict to country data. Defaults to False, then the complete data will be loaded, including neighbor countries (when applicable).
+            distance_radius_km (float, optional): The distance radius in kilometers for filtering data. Defaults to None.
         """
         self.city = city
         self.restrict_country_boundaries = restrict_country_boundaries
+        self.distance_radius_km = distance_radius_km
         self.loader = self.get_loader()
         self.geojson_output_path = geojson_output_path if geojson_output_path is not None else self._get_default_geojson_path()
         self.data = self.loader.load_all_data(data_types)
@@ -33,7 +36,8 @@ class SharedMobilityManager:
         :return: An instance of the loader for the specified city.
         """
         if self.city == LivingLabsCity.GENEVA:
-            return GenevaLoader(self.restrict_country_boundaries)
+            return GenevaLoader(restrict_country_boundaries=self.restrict_country_boundaries,
+                                distance_radius_km=self.distance_radius_km)
         else:
             raise ValueError(
                 f"Unsupported Living Lab: {self.city}, no values found for this city.")
@@ -53,7 +57,16 @@ class SharedMobilityManager:
         Get the default path for saving GeoJSON files.
         :return: The default path for saving GeoJSON files. Value is "data/geojson/{city_name}".
         """
-        return DEFAULT_OUTPUT_JSON_FILES_PATH + str(self.city.name).lower() + f"_{'local' if self.restrict_country_boundaries else 'default'}"
+        city_name = str(self.city.name).lower()
+        file_path = [DEFAULT_OUTPUT_JSON_FILES_PATH, city_name]
+
+        if self.restrict_country_boundaries:
+            file_path.append("_within-country")
+
+        if self.distance_radius_km:
+            file_path.append(f"_{self.distance_radius_km}km-radius")
+
+        return "".join(file_path)
 
     def save_to_geojson(self, output_path: str = None):
         """
