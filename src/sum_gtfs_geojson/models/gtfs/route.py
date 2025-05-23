@@ -1,4 +1,4 @@
-from pydantic import Field, HttpUrl, constr
+from pydantic import Field
 from typing import Optional
 from .. import SumGtfsBaseModel
 

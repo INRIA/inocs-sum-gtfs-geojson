@@ -1,10 +1,9 @@
-from typing import List, Dict, Optional
+from typing import List, Dict, Tuple
 from pydantic import Field
-# from . import Stop, Route, Trip, StopTime
 from .. import SumGtfsBaseModel
 from shapely.geometry import Point, LineString, mapping
 import geopandas as gpd
-from . import Stop, Route, Trip, StopTime
+from . import Stop, Route, Trip, StopTime, Itinerary
 from collections import defaultdict
 import json
 
@@ -23,6 +22,7 @@ class GTFSNetwork(SumGtfsBaseModel):
     routes: List[Route] = Field(default_factory=list)
     trips: List[Trip] = Field(default_factory=list)
     stop_times: List[StopTime] = Field(default_factory=list)
+    itineraries: List[Itinerary] = Field(default_factory=list)
 
     def stops_to_geojson(self, filepath: str = None) -> gpd.GeoDataFrame:
         """
@@ -43,71 +43,39 @@ class GTFSNetwork(SumGtfsBaseModel):
 
         return gdf
 
-    def itineraries_to_geojson(self, filepath: str = None) -> Dict:
+    def itineraries_to_geojson(self, filepath: str = None) -> gpd.GeoDataFrame:
         """
-        Generates a GeoJSON FeatureCollection of route itineraries using stop sequences
-        from GTFS trips and stop_times. One feature per route_id + direction_id.
+        Export each route's itinerary as a GeoJSON LineString, using stop sequences for each trip.
 
         Args:
             filepath (str): The path to the output GeoJSON file. Optional, if defined it will be saved to this path.
-
-        Returns:
-            A GeoJSON FeatureCollection dictionary.
         """
-        print("Exporting itineraries to GeoJSON...")
-        # Map stop_id to coordinates
-        stop_coords = {stop.stop_id: [
-            stop.stop_lon, stop.stop_lat] for stop in self.stops}
-
-        # Group stop_times by trip_id
-        trip_stop_times: Dict[str, List[StopTime]] = defaultdict(list)
-        for st in self.stop_times:
-            trip_stop_times[st.trip_id].append(st)
-
-        # Group trips by (route_id, direction_id) and pick first trip as representative
-        trip_by_route_dir: Dict[tuple, Trip] = {}
-        for trip in self.trips:
-            key = (trip.route_id, trip.direction_id or 0)
-            if key not in trip_by_route_dir:
-                trip_by_route_dir[key] = trip
-
-        # Map route_id to route for metadata
-        route_lookup = {route.route_id: route for route in self.routes}
-
+        print("Exporting itineraries to GeoJSON... for itineraries count = ", len(
+            self.itineraries))
+        if not self.itineraries:
+            return
         features = []
-
-        for (route_id, direction_id), trip in trip_by_route_dir.items():
-            stop_times = sorted(trip_stop_times.get(
-                trip.trip_id, []), key=lambda st: st.stop_sequence)
-            coords = [stop_coords[st.stop_id]
-                      for st in stop_times if st.stop_id in stop_coords]
-
+        for itinerary in self.itineraries:
+            coords = [(stop.stop_lon, stop.stop_lat)
+                      for stop in itinerary.stops if stop.stop_lon is not None and stop.stop_lat is not None]
             if len(coords) < 2:
-                continue  # Skip invalid or empty lines
-
-            route = route_lookup.get(route_id)
-
-            properties = {
-                "route_id": route.route_id if route else route_id,
-                "route_short_name": route.route_short_name if route else None,
-                "route_long_name": route.route_long_name if route else None,
-                "route_type": route.route_type if route else None,
-                "direction_id": direction_id,
-                "trip_id": trip.trip_id,
-                "headsign": trip.trip_headsign,
-                "color": route.route_color if route else None,
-                "text_color": route.route_text_color if route else None,
-            }
-
+                continue
             feature = {
                 "type": "Feature",
                 "geometry": mapping(LineString(coords)),
-                "properties": properties
+                "properties": {
+                    "route_id": itinerary.route_id,
+                    "direction_id": itinerary.direction_id,
+                    "trip_id": itinerary.trip_id,
+                    "headsign": itinerary.headsign,
+                    "route_short_name": itinerary.route_short_name,
+                    "route_long_name": itinerary.route_long_name,
+                    "route_type": itinerary.route_type,
+                    "color": itinerary.color,
+                    "text_color": itinerary.text_color
+                }
             }
-
             features.append(feature)
-
-        # save to file filepath
         feature_collection = {
             "type": "FeatureCollection",
             "features": features
@@ -115,12 +83,81 @@ class GTFSNetwork(SumGtfsBaseModel):
         if filepath is not None:
             with open(filepath, 'w') as f:
                 json.dump(feature_collection, f, indent=4)
-
         print(f"Exported {len(features)} itineraries to {filepath}")
-        return feature_collection
-        # gdf = gpd.GeoDataFrame(
-        #     features,
-        #     geometry="geometry",
-        #     crs="EPSG:4326"
-        # )
-        # gdf.to_file(filepath, driver="GeoJSON")
+
+        return gpd.GeoDataFrame.from_features(features, crs="EPSG:4326")
+
+    def build_itineraries(
+        self,
+        stops: List[Stop],
+        stop_times: List[StopTime],
+        trips: List[Trip],
+        routes: List[Route]
+    ) -> List[Itinerary]:
+        """
+        Constructs a list of Itinerary objects from GTFS data.
+
+        Args:
+            stops (List[Stop]): List of Stop instances.
+            stop_times (List[StopTime]): List of StopTime instances.
+            trips (List[Trip]): List of Trip instances.
+            routes (List[Route]): List of Route instances.
+
+        Returns:
+            List[Itinerary]: A list of Itinerary objects representing unique route and direction combinations.
+        """
+        # Map stop_id to Stop object for quick lookup
+        stop_lookup: Dict[str, Stop] = {stop.stop_id: stop for stop in stops}
+
+        # Group stop_times by trip_id
+        trip_stop_times: Dict[str, List[StopTime]] = defaultdict(list)
+        for st in stop_times:
+            trip_stop_times[st.trip_id].append(st)
+
+        # Group trips by (route_id, direction_id) and select the first trip as representative
+        trip_by_route_dir: Dict[Tuple[str, int], Trip] = {}
+        for trip in trips:
+            key = (trip.route_id, trip.direction_id or 0)
+            if key not in trip_by_route_dir:
+                trip_by_route_dir[key] = trip
+
+        # Map route_id to Route object for metadata
+        route_lookup: Dict[str, Route] = {
+            route.route_id: route for route in routes}
+
+        self.itineraries: List[Itinerary] = []
+
+        for (route_id, direction_id), trip in trip_by_route_dir.items():
+            stop_times_list = sorted(
+                trip_stop_times.get(trip.trip_id, []),
+                key=lambda st: st.stop_sequence
+            )
+
+            # Build the list of Stop instances for the itinerary
+            itinerary_stops: List[Stop] = []
+            for st in stop_times_list:
+                stop = stop_lookup.get(st.stop_id)
+                if stop:
+                    itinerary_stops.append(stop)
+
+            if len(itinerary_stops) < 2:
+                continue  # Skip itineraries with insufficient stops
+
+            route = route_lookup.get(route_id)
+
+            itinerary = Itinerary(
+                route_id=route.route_id if route else route_id,
+                direction_id=direction_id,
+                trip_id=trip.trip_id,
+                headsign=trip.trip_headsign,
+                route_short_name=route.route_short_name if route else None,
+                route_long_name=route.route_long_name if route else None,
+                route_type=route.route_type if route else None,
+                color=route.route_color if route else None,
+                text_color=route.route_text_color if route else None,
+                stops=itinerary_stops
+            )
+
+            self.itineraries.append(itinerary)
+
+        return self.itineraries

@@ -10,6 +10,7 @@ DEFAULT_DATA_TYPES = [
     DataType.BIKE_STATIONS,
     DataType.RIDERSHIP,
     DataType.BIKE_TRIPS,
+    DataType.HEX_GRID
 ]
 
 class SharedMobilityManager:

@@ -1,4 +1,4 @@
-## 🏗️ Installation
+## Local installation for development
 
 Ensure you have Python installed (recommended: Python 3.8+).
 

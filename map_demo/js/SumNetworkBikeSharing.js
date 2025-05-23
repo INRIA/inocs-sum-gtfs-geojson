@@ -222,6 +222,10 @@ class SumNetworkBikeSharing extends HTMLElement {
         console.log("ADDING LAYERS TO MAP");
         this.layers.stops.addTo(this.map);
         this.layers.routes.addTo(this.map);
+        if (this.layers.hexGrid) {
+          this.layers.hexGrid.addTo(this.map);
+        }
+        this.layers.bikeStations.addTo(this.map);
       });
 
     fetch(path + "routes.geojson")
@@ -316,7 +320,7 @@ class SumNetworkBikeSharing extends HTMLElement {
       .then((res) => res.json())
       .then((data) => {
         // Create a GeoJSON layer
-        this.layers.hexGrid = L.geoJSON(data, {
+        L.geoJSON(data, {
           style: function (feature) {
             return {
               color: "#333",
@@ -326,9 +330,9 @@ class SumNetworkBikeSharing extends HTMLElement {
             };
           },
           onEachFeature: function (feature, layer) {
-            layer.bindPopup("Hex ID: " + (feature.properties.id || "N/A"));
+            layer.bindPopup("Hex ID: " + (feature.properties.h3_id || "N/A"));
           },
-        }).addTo(this.map);
+        }).addTo(this.layers.hexGrid);
       })
       .catch((err) => {
         console.error("Failed to load hex grid:", err);

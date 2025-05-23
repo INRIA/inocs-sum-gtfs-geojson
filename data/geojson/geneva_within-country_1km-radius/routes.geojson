@@ -1,0 +1,693 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.155432,
+                        46.202549
+                    ],
+                    [
+                        6.153488,
+                        46.202024
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_33",
+                "direction_id": 0,
+                "trip_id": "242",
+                "headsign": "Rive",
+                "route_short_name": "33",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "00B0A4",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.144599,
+                        46.203694
+                    ],
+                    [
+                        6.147336,
+                        46.203024
+                    ],
+                    [
+                        6.152641,
+                        46.201663
+                    ],
+                    [
+                        6.150867,
+                        46.199996
+                    ],
+                    [
+                        6.152846,
+                        46.198481
+                    ],
+                    [
+                        6.15175,
+                        46.19773
+                    ],
+                    [
+                        6.147323,
+                        46.198535
+                    ],
+                    [
+                        6.148223,
+                        46.199488
+                    ],
+                    [
+                        6.148582,
+                        46.200168
+                    ],
+                    [
+                        6.148113,
+                        46.200856
+                    ],
+                    [
+                        6.147825,
+                        46.201509
+                    ],
+                    [
+                        6.146618,
+                        46.201064
+                    ],
+                    [
+                        6.143872,
+                        46.201563
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_92",
+                "direction_id": 0,
+                "trip_id": "806",
+                "headsign": "Place de Neuve",
+                "route_short_name": "92",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "89CBBE",
+                "text_color": "000000"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.147279,
+                        46.207063
+                    ],
+                    [
+                        6.150775,
+                        46.203342
+                    ],
+                    [
+                        6.153457,
+                        46.202788
+                    ],
+                    [
+                        6.155732,
+                        46.202454
+                    ],
+                    [
+                        6.155242,
+                        46.20073
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_25",
+                "direction_id": 0,
+                "trip_id": "1231",
+                "headsign": "Th\u00f4nex-Vallard",
+                "route_short_name": "25",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "A05909",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.151942,
+                        46.201646
+                    ],
+                    [
+                        6.151399,
+                        46.203241
+                    ],
+                    [
+                        6.146643,
+                        46.207631
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_8",
+                "direction_id": 0,
+                "trip_id": "1448",
+                "headsign": "Palexpo",
+                "route_short_name": "8",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "84471C",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.147279,
+                        46.207063
+                    ],
+                    [
+                        6.150775,
+                        46.203342
+                    ],
+                    [
+                        6.153457,
+                        46.202788
+                    ],
+                    [
+                        6.155732,
+                        46.202454
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_9",
+                "direction_id": 0,
+                "trip_id": "1528",
+                "headsign": "Belle-Terre-Place-de-l'Araire",
+                "route_short_name": "9",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "E2001D",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.148546,
+                        46.198405
+                    ],
+                    [
+                        6.146718,
+                        46.200093
+                    ],
+                    [
+                        6.144228,
+                        46.201279
+                    ],
+                    [
+                        6.142945,
+                        46.205106
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_20",
+                "direction_id": 0,
+                "trip_id": "1761",
+                "headsign": "Valavran",
+                "route_short_name": "20",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "00A828",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.153488,
+                        46.202024
+                    ],
+                    [
+                        6.156875,
+                        46.201801
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_A",
+                "direction_id": 0,
+                "trip_id": "2583",
+                "headsign": "Gy-Temple",
+                "route_short_name": "A",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "FF8000",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.157521,
+                        46.203527
+                    ],
+                    [
+                        6.15576,
+                        46.201833
+                    ],
+                    [
+                        6.153927,
+                        46.202622
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_E",
+                "direction_id": 0,
+                "trip_id": "2623",
+                "headsign": "Rive",
+                "route_short_name": "E",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "FF8000",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.141962,
+                        46.202315
+                    ],
+                    [
+                        6.144599,
+                        46.203694
+                    ],
+                    [
+                        6.147336,
+                        46.203024
+                    ],
+                    [
+                        6.152641,
+                        46.201663
+                    ],
+                    [
+                        6.156566,
+                        46.202292
+                    ],
+                    [
+                        6.158147,
+                        46.203912
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_2",
+                "direction_id": 0,
+                "trip_id": "2731",
+                "headsign": "Gen\u00e8ve-Plage",
+                "route_short_name": "2",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "D2DB4A",
+                "text_color": "000000"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.157521,
+                        46.203527
+                    ],
+                    [
+                        6.155432,
+                        46.202549
+                    ],
+                    [
+                        6.151399,
+                        46.203241
+                    ],
+                    [
+                        6.146643,
+                        46.207631
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_6",
+                "direction_id": 0,
+                "trip_id": "2732",
+                "headsign": "Vernier-Village",
+                "route_short_name": "6",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "008CBE",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.142016,
+                        46.204394
+                    ],
+                    [
+                        6.141693,
+                        46.202177
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_19",
+                "direction_id": 0,
+                "trip_id": "2755",
+                "headsign": "Onex-Cit\u00e9",
+                "route_short_name": "19",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "A05909",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.141962,
+                        46.202315
+                    ],
+                    [
+                        6.142945,
+                        46.205106
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_3",
+                "direction_id": 0,
+                "trip_id": "2859",
+                "headsign": "Gardiol",
+                "route_short_name": "3",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "B82F89",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.141962,
+                        46.202315
+                    ],
+                    [
+                        6.142945,
+                        46.205106
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_7",
+                "direction_id": 0,
+                "trip_id": "3160",
+                "headsign": "Lignon-Tours",
+                "route_short_name": "7",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "00A828",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.141962,
+                        46.202315
+                    ],
+                    [
+                        6.142945,
+                        46.205106
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_10",
+                "direction_id": 0,
+                "trip_id": "3280",
+                "headsign": "Gen\u00e8ve-A\u00e9roport-Terminal",
+                "route_short_name": "10",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "006E3D",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.143795,
+                        46.200995
+                    ],
+                    [
+                        6.144599,
+                        46.203694
+                    ],
+                    [
+                        6.147336,
+                        46.203024
+                    ],
+                    [
+                        6.15282,
+                        46.201764
+                    ],
+                    [
+                        6.156453,
+                        46.201023
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_12",
+                "direction_id": 0,
+                "trip_id": "3532",
+                "headsign": "Moillesulaz",
+                "route_short_name": "12",
+                "route_long_name": "",
+                "route_type": 0,
+                "color": "F5A300",
+                "text_color": "000000"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.143795,
+                        46.200995
+                    ],
+                    [
+                        6.144599,
+                        46.203694
+                    ],
+                    [
+                        6.147336,
+                        46.203024
+                    ],
+                    [
+                        6.15282,
+                        46.201764
+                    ],
+                    [
+                        6.156453,
+                        46.201023
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_17",
+                "direction_id": 0,
+                "trip_id": "4259",
+                "headsign": "Annemasse-Parc Montessuit",
+                "route_short_name": "17",
+                "route_long_name": "",
+                "route_type": 0,
+                "color": "00ACE7",
+                "text_color": "000000"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.143795,
+                        46.200995
+                    ],
+                    [
+                        6.143483,
+                        46.204824
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_18",
+                "direction_id": 0,
+                "trip_id": "4337",
+                "headsign": "CERN",
+                "route_short_name": "18",
+                "route_long_name": "",
+                "route_type": 0,
+                "color": "B82F89",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.15576,
+                        46.201833
+                    ],
+                    [
+                        6.152441,
+                        46.201922
+                    ],
+                    [
+                        6.151399,
+                        46.203241
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_29",
+                "direction_id": 0,
+                "trip_id": "4472",
+                "headsign": "Creux-de-Gentod, gare",
+                "route_short_name": "29",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "F5B4D2",
+                "text_color": "000000"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.15576,
+                        46.201833
+                    ],
+                    [
+                        6.152441,
+                        46.201922
+                    ],
+                    [
+                        6.151399,
+                        46.203241
+                    ],
+                    [
+                        6.146643,
+                        46.207631
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_E+",
+                "direction_id": 0,
+                "trip_id": "9753",
+                "headsign": "Gare Cornavin",
+                "route_short_name": "E+",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "000000",
+                "text_color": "FFFFFF"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        6.15576,
+                        46.201833
+                    ],
+                    [
+                        6.152441,
+                        46.201922
+                    ],
+                    [
+                        6.151399,
+                        46.203241
+                    ],
+                    [
+                        6.146643,
+                        46.207631
+                    ]
+                ]
+            },
+            "properties": {
+                "route_id": "ch:1:SLNID:881_G+",
+                "direction_id": 0,
+                "trip_id": "9804",
+                "headsign": "Gare Cornavin",
+                "route_short_name": "G+",
+                "route_long_name": "",
+                "route_type": 3,
+                "color": "000000",
+                "text_color": "FFFFFF"
+            }
+        }
+    ]
+}

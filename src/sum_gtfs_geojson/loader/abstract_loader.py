@@ -194,8 +194,8 @@ class AbstractLoader(ABC):
         if datatypes is None:
             print("No data types specified, nothing to load.")
             return ums
-            
-        if DataType.STOPS in datatypes:
+
+        if DataType.STOPS in datatypes or DataType.ITINERARIES in datatypes:
             ums.public_transport.stops = self.load_stops()
             print(
                 f"Finished loading stations, loaded counter = {len(ums.public_transport.stops)}")
@@ -209,6 +209,12 @@ class AbstractLoader(ABC):
             ums.public_transport.stop_times = self.load_stop_times()
             print(
                 f"Finished loading stop_times, loaded counter = {len(ums.public_transport.stop_times)}")
+            ums.public_transport.build_itineraries(ums.public_transport.stops,
+                                                   ums.public_transport.stop_times,
+                                                   ums.public_transport.trips,
+                                                   ums.public_transport.routes)
+            print(
+                f"Finished building itineraries, loaded counter = {len(ums.public_transport.itineraries)}")
         if DataType.BIKE_STATIONS in datatypes:
             ums.bike_stations = self.load_bike_stations()
             print(
@@ -222,12 +228,13 @@ class AbstractLoader(ABC):
             print(
                 f"Finished loading bike_trips, loaded counter = {len(ums.bike_trips)}")
         if DataType.HEX_GRID in datatypes:
-            ums.hex_grid = self.load_hex_grid(ums.public_transport.stops, ums.bike_stations)
+            ums.hex_grid = self.load_hex_grid(
+                ums.public_transport.stops, ums.bike_stations)
             print(
                 f"Finished loading hex grid, loaded counter = {len(ums.hex_grid.cells)}")
 
         return ums
-    
+
     def load_hex_grid(self, stops: List[Stop] = None, bike_stations: List[StationInfoStatus] = None) -> HexGrid:
         """
         Load the hex grid for the specified city.
@@ -236,7 +243,7 @@ class AbstractLoader(ABC):
         print("Loading hex grid... with resolution: ", self.grid_resolution)
         if self.grid_resolution is None:
             raise ValueError("Grid resolution must be set to load a hex grid.")
-        
+
         stop_points = [
             Point(s.stop_lon, s.stop_lat) for s in stops if s.stop_lat is not None and s.stop_lat is not None]
         bike_station_points = [
@@ -244,9 +251,9 @@ class AbstractLoader(ABC):
         all_points = stop_points + bike_station_points
         if not all_points:
             raise ValueError("No valid points found for hex grid generation.")
-        
+
         print(f"Generating hex grid with {len(all_points)} points.")
         grid = GeoToolkit.generate_hex_grid(all_points, self.grid_resolution)
         print(f"Hex grid generated with {len(grid.cells)} cells.")
-        
+
         return grid
