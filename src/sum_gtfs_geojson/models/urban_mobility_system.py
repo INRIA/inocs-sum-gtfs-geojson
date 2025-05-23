@@ -43,8 +43,8 @@ class UrbanMobilitySystem(SumGtfsBaseModel):
         Path(output_path).mkdir(parents=True, exist_ok=True)
 
         # Save each layer as a separate GeoJSON file
-        self.stations_to_geojson(os.path.join(output_path, "stations.geojson"))
-        self.routes_to_geojson(os.path.join(output_path, "routes.geojson"))
+        self.stops_to_geojson(os.path.join(output_path, "stops.geojson"))
+        self.itineraries_to_geojson(os.path.join(output_path, "itineraries.geojson"))
         self.bike_stations_to_geojson(os.path.join(
             output_path, "bike_stations.geojson"))
         self.ridership_to_geojson(os.path.join(
@@ -55,7 +55,7 @@ class UrbanMobilitySystem(SumGtfsBaseModel):
             output_path, "hex_grid.geojson"))
         print(f"GeoJSON files saved to {output_path}")
 
-    def stations_to_geojson(self, filepath):
+    def stops_to_geojson(self, filepath):
         """
         Export stops as a GeoJSON file, with stop information as properties.
         Args:
@@ -64,7 +64,7 @@ class UrbanMobilitySystem(SumGtfsBaseModel):
         print("Exporting stops to GeoJSON...")
         self.public_transport.stops_to_geojson(filepath)
 
-    def routes_to_geojson(self, filepath):
+    def itineraries_to_geojson(self, filepath):
         """
         Export each route's itinerary as a GeoJSON LineString, using stop sequences for each trip.
 

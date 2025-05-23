@@ -26,11 +26,11 @@ class SumNetworkBikeSharing extends HTMLElement {
     this.datasetPath = null;
     this.periodLayers = {};
     this.layers = {
-      stops: L.layerGroup(),
-      bikeStations: L.layerGroup(),
-      routes: L.layerGroup(),
-      trips: L.layerGroup(),
-      hexGrid: L.layerGroup(),
+      stops: null,
+      itineraries: null,
+      trips: null,
+      bikeStations: null,
+      hexGrid: null,
     };
   }
 
@@ -121,12 +121,32 @@ class SumNetworkBikeSharing extends HTMLElement {
     }).addTo(this.map);
   }
 
+  initLayers() {
+    console.log("init layers", this.layers);
+    this.layers.stops?.addTo(this.map);
+    this.layers.itineraries?.addTo(this.map);
+    this.layers.hexGrid?.addTo(this.map);
+    this.layers.bikeStations?.addTo(this.map);
+  }
+
   addControls() {
-    console.log("ADDIND CONTROLS");
+    console.log("add controls", this.layers);
+    const validLayers = Object.keys(this.layers).filter(
+      (layer) => this.layers[layer] !== null
+    );
+    if (validLayers.length === 0) {
+      console.warn("No layers available");
+      return;
+    }
+    const layerControl = validLayers.reduce((acc, layer) => {
+      acc[layer] = this.layers[layer];
+      return acc;
+    }, {});
+    console.log("validLayers", validLayers);
     if (Object.keys(this.periodLayers).length === 0) {
       console.warn("No period layers available");
       L.control
-        .layers(undefined, this.layers, { collapsed: false })
+        .layers(undefined, layerControl, { collapsed: false })
         .addTo(this.map);
       return;
     }
@@ -138,12 +158,12 @@ class SumNetworkBikeSharing extends HTMLElement {
       {}
     );
     L.control
-      .layers(periodLayersControl, this.layers, { collapsed: false })
+      .layers(periodLayersControl, layerControl, { collapsed: false })
       .addTo(this.map);
   }
 
   addParametersBox(path) {
-    fetch(path + "tunable_parameters.json")
+    return fetch(path + "tunable_parameters.json")
       .then((res) => res.json())
       .then((data) => {
         const infoBox = L.control({ position: "bottomright" });
@@ -166,6 +186,9 @@ class SumNetworkBikeSharing extends HTMLElement {
           return div;
         };
         infoBox.addTo(this.map);
+      })
+      .catch((err) => {
+        console.error("Failed to load tunable parameters:", err);
       });
   }
 
@@ -180,10 +203,13 @@ class SumNetworkBikeSharing extends HTMLElement {
   loadData(path) {
     let gridBounds = [];
 
-    fetch(path + "stations.geojson")
+    const fetchStops = fetch(path + "stops.geojson")
       .then((res) => res.json())
       .then((data) => {
         data.features.forEach((feature) => {
+          if (!this.layers.stops) {
+            this.layers.stops = L.layerGroup();
+          }
           const [x, y] = feature.geometry.coordinates;
           const { stop_id, stop_name, location_type } = feature.properties;
           // const hexCoords = createHexagon([x, y], 0.01);
@@ -217,20 +243,16 @@ class SumNetworkBikeSharing extends HTMLElement {
           this.map.fitBounds(gridBounds);
         }
       })
-      .finally(() => {
-        // Add to map
-        console.log("ADDING LAYERS TO MAP");
-        this.layers.stops.addTo(this.map);
-        this.layers.routes.addTo(this.map);
-        if (this.layers.hexGrid) {
-          this.layers.hexGrid.addTo(this.map);
-        }
-        this.layers.bikeStations.addTo(this.map);
+      .catch((err) => {
+        console.error("Failed to load stops:", err);
       });
 
-    fetch(path + "routes.geojson")
+    const fetchItineraries = fetch(path + "itineraries.geojson")
       .then((res) => res.json())
       .then((data) => {
+        if (!this.layers.itineraries) {
+          this.layers.itineraries = L.layerGroup();
+        }
         // Get unique route names
         const routeNames = [
           ...new Set(data.features.map((f) => f.properties.route_short_name)),
@@ -260,11 +282,14 @@ class SumNetworkBikeSharing extends HTMLElement {
               weight: 3,
             };
           },
-        }).addTo(this.layers.routes);
+        }).addTo(this.layers.itineraries);
+      })
+      .catch((err) => {
+        console.error("Failed to load itineraries:", err);
       });
 
     // bike stations here
-    fetch(path + "bike_stations.geojson")
+    const fetchBikeStations = fetch(path + "bike_stations.geojson")
       .then((res) => res.json())
       .then((data) => {
         const periods = data.metadata?.periods; // Fallback if missing
@@ -292,14 +317,17 @@ class SumNetworkBikeSharing extends HTMLElement {
           this.periodLayers[0].staticLayer.addTo(this.map);
         }
       })
-      .finally(() => {
-        this.addControls();
+      .catch((err) => {
+        console.error("Failed to load bike stations:", err);
       });
 
-    fetch(path + "od_trips.json")
+    const fetchTrips = fetch(path + "od_trips.json")
       .then((res) => res.json())
       .then((trips) => {
         trips.forEach((trip) => {
+          if (!this.layers.trips) {
+            this.layers.trips = L.layerGroup();
+          }
           const start = trip.coordinates[0];
           const end = trip.coordinates[1];
           L.polyline(
@@ -314,11 +342,17 @@ class SumNetworkBikeSharing extends HTMLElement {
             }
           ).addTo(this.layers.trips);
         });
+      })
+      .catch((err) => {
+        console.error("Failed to load trips:", err);
       });
 
-    fetch(path + "hex_grid.geojson")
+    const fetchHexGrid = fetch(path + "hex_grid.geojson")
       .then((res) => res.json())
       .then((data) => {
+        if (!this.layers.hexGrid) {
+          this.layers.hexGrid = L.layerGroup();
+        }
         // Create a GeoJSON layer
         L.geoJSON(data, {
           style: function (feature) {
@@ -338,7 +372,19 @@ class SumNetworkBikeSharing extends HTMLElement {
         console.error("Failed to load hex grid:", err);
       });
 
-    this.addParametersBox(path);
+    const addParamControl = this.addParametersBox(path);
+
+    return Promise.all([
+      fetchStops,
+      fetchItineraries,
+      fetchBikeStations,
+      fetchTrips,
+      fetchHexGrid,
+      addParamControl,
+    ]).then(() => {
+      this.addControls();
+      this.initLayers();
+    });
   }
 
   //MAP helper functions
