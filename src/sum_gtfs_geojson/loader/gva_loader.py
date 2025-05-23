@@ -317,6 +317,14 @@ class GenevaLoader(AbstractLoader):
         bike_trips_data = []
         for _, row in bike_trips.iterrows():
             try:
+                latitude_start = safe_get(row, "latitude_start", None, float)
+                longitude_start = safe_get(row, "longitude_start", None, float)
+                if (not self.position_is_valid(latitude_start, longitude_start)):
+                    continue
+                latitude_end = safe_get(row, "latitude_end", None, float)
+                longitude_end = safe_get(row, "longitude_end", None, float)
+                if (not self.position_is_valid(latitude_end, longitude_start)):
+                    continue
                 bike_trips_data.append(
                     BikeTrip(
                         trip_id=safe_get(row, "trip_id", "", str),
@@ -326,14 +334,10 @@ class GenevaLoader(AbstractLoader):
                             row, "trip_started_at_utc", "", str),
                         trip_ended_at_utc=safe_get(
                             row, "trip_ended_at_utc", "", str),
-                        latitude_start=safe_get(
-                            row, "latitude_start", None, float),
-                        longitude_start=safe_get(
-                            row, "longitude_start", None, float),
-                        latitude_end=safe_get(
-                            row, "latitude_end", None, float),
-                        longitude_end=safe_get(
-                            row, "longitude_end", None, float),
+                        latitude_start=latitude_start,
+                        longitude_start=longitude_start,
+                        latitude_end=latitude_end,
+                        longitude_end=longitude_end,
                         distance_in_km=safe_get(
                             row, "distance_in_km", None, float),
                     )
