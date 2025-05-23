@@ -26,9 +26,11 @@ class SumNetworkBikeSharing extends HTMLElement {
     this.datasetPath = null;
     this.periodLayers = {};
     this.layers = {
-      grid: L.layerGroup(),
+      stops: L.layerGroup(),
+      bikeStations: L.layerGroup(),
       routes: L.layerGroup(),
       trips: L.layerGroup(),
+      hexGrid: L.layerGroup(),
     };
   }
 
@@ -194,7 +196,7 @@ class SumNetworkBikeSharing extends HTMLElement {
           //     weight: 1,
           //     fillOpacity: 0.1,
           //   }
-          // ).addTo(this.layers.grid);
+          // ).addTo(this.layers.stops);
           const label = L.marker([y, x]);
           const icon = L.icon({
             iconUrl: "map_demo/icons/train-bus.svg",
@@ -207,19 +209,19 @@ class SumNetworkBikeSharing extends HTMLElement {
           label.setIcon(icon);
           const popup = `<strong>${stop_name}</strong><br/>`;
           label.bindPopup(popup);
-          console.log("adding to new layer")
-          label.addTo(this.layers.grid);
+          console.log("adding to new layer");
+          label.addTo(this.layers.stops);
         });
 
         if (gridBounds.length) {
           this.map.fitBounds(gridBounds);
         }
       })
-            .finally(() => {
-                    // Add to map
-    console.log('ADDING LAYERS TO MAP')
-    this.layers.grid.addTo(this.map);
-    this.layers.routes.addTo(this.map);
+      .finally(() => {
+        // Add to map
+        console.log("ADDING LAYERS TO MAP");
+        this.layers.stops.addTo(this.map);
+        this.layers.routes.addTo(this.map);
       });
 
     fetch(path + "routes.geojson")
@@ -255,15 +257,22 @@ class SumNetworkBikeSharing extends HTMLElement {
             };
           },
         }).addTo(this.layers.routes);
-      })
-
+      });
 
     // bike stations here
     fetch(path + "bike_stations.geojson")
       .then((res) => res.json())
       .then((data) => {
-        const periods = data.metadata?.periods || [0]; // Fallback if missing
+        const periods = data.metadata?.periods; // Fallback if missing
         const features = data.features;
+        if (!periods) {
+          const bikeStationsLayer = this.initializeBikesStationsLayer(
+            features.filter((f) => f.geometry.type === "Point")
+          );
+          console.log("Adding bike stations layer", bikeStationsLayer);
+          this.layers.bikeStations = bikeStationsLayer;
+          return;
+        }
         periods.forEach((period) => {
           this.initializePeriod(
             period,
@@ -303,6 +312,27 @@ class SumNetworkBikeSharing extends HTMLElement {
         });
       });
 
+    fetch(path + "hex_grid.geojson")
+      .then((res) => res.json())
+      .then((data) => {
+        // Create a GeoJSON layer
+        this.layers.hexGrid = L.geoJSON(data, {
+          style: function (feature) {
+            return {
+              color: "#333",
+              weight: 1,
+              fillColor: "#66ccff",
+              fillOpacity: 0.4,
+            };
+          },
+          onEachFeature: function (feature, layer) {
+            layer.bindPopup("Hex ID: " + (feature.properties.id || "N/A"));
+          },
+        }).addTo(this.map);
+      })
+      .catch((err) => {
+        console.error("Failed to load hex grid:", err);
+      });
 
     this.addParametersBox(path);
   }

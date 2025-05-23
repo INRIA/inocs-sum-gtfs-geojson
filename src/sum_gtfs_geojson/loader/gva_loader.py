@@ -50,8 +50,9 @@ class GenevaLoader(AbstractLoader):
     @property
     def CITY_NAME(self): return self.__class__._CITY_NAME
 
-    def __init__(self, restrict_country_boundaries: bool = True, distance_radius_km: float = None):
-        super().__init__(self.COUNTRY_A3_CODE, restrict_country_boundaries, distance_radius_km)
+    def __init__(self, restrict_country_boundaries: bool = True, distance_radius_km: float = None,
+                 grid_resolution: int = 8):
+        super().__init__(self.COUNTRY_A3_CODE, restrict_country_boundaries, distance_radius_km, grid_resolution)
 
     def load_stops(self):
         """ Load GTFS stops from the GTFS data file

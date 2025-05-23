@@ -3,6 +3,7 @@ from .sum_gtfs_base_model import SumGtfsBaseModel
 from .gtfs import Stop, Route, GTFSNetwork
 from .gbfs import StationInfoStatus
 from .mobility import BikeTrip, Ridership
+from .grid import HexGrid
 from pydantic import Field
 import os
 from pathlib import Path
@@ -30,6 +31,9 @@ class UrbanMobilitySystem(SumGtfsBaseModel):
     bike_trips: List[BikeTrip] = Field(
         ..., description="Trip-level data from bike sharing systems.")
 
+    hex_grid: Optional[HexGrid] = Field(
+        None, description="Hexagonal grid for spatial analysis.")
+
     def save_to_geojson(self, output_path: str = "data/output/geojson"):
         """
         Save the Urban Mobility System data to GeoJSON files. One file per data type.
@@ -47,6 +51,9 @@ class UrbanMobilitySystem(SumGtfsBaseModel):
             output_path, "ridership.geojson"))
         self.bike_trips_to_geojson(os.path.join(
             output_path, "bike_trips.geojson"))
+        self.hex_grid_to_geojson(os.path.join(
+            output_path, "hex_grid.geojson"))
+        print(f"GeoJSON files saved to {output_path}")
 
     def stations_to_geojson(self, filepath):
         """
@@ -137,3 +144,13 @@ class UrbanMobilitySystem(SumGtfsBaseModel):
         )
         gdf = gdf[gdf.geometry.notnull()]
         gdf.to_file(filepath, driver="GeoJSON")
+
+    def hex_grid_to_geojson(self, filepath):
+        """
+        Export the hex grid to a GeoJSON file.
+        Args:
+            filepath (str): The path to the output GeoJSON file.
+        """
+        if not self.hex_grid:
+            return
+        self.hex_grid.to_geojson(filepath)

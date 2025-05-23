@@ -7,3 +7,4 @@ class DataType(Enum):
     BIKE_STATIONS = auto()
     RIDERSHIP = auto()
     BIKE_TRIPS = auto()
+    HEX_GRID = auto()

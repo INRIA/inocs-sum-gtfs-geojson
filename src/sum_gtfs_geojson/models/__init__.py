@@ -3,6 +3,7 @@ from .urban_mobility_system import UrbanMobilitySystem
 from .gtfs import Stop, Route, Trip, Agency, GTFSNetwork, StopTime
 from .gbfs import StationInfoStatus
 from .mobility import BikeTrip, Ridership
+from .grid import HexGrid, HexCell
 
 __all__ = [
     "SumGtfsBaseModel",
@@ -15,5 +16,7 @@ __all__ = [
     "BikeTrip",
     "Ridership",
     "GTFSNetwork",
-    "StopTime"
+    "StopTime",
+    "HexGrid",
+    "HexCell"
 ]
