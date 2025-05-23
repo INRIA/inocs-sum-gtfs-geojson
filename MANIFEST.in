@@ -1,0 +1,6 @@
+# Include all data files recursively under sum_gtfs_geojson/data/
+recursive-include src/sum_gtfs_geojson/data *
+
+# Optionally include the README and license files if you have them
+include README.md
+include LICENSE

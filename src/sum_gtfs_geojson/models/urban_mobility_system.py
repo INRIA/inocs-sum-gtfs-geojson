@@ -34,11 +34,11 @@ class UrbanMobilitySystem(SumGtfsBaseModel):
     hex_grid: Optional[HexGrid] = Field(
         None, description="Hexagonal grid for spatial analysis.")
 
-    def save_to_geojson(self, output_path: str = "data/output/geojson"):
+    def save_to_geojson(self, output_path: str = "data/sum_gtfs_geojson/geojson"):
         """
         Save the Urban Mobility System data to GeoJSON files. One file per data type.
         The files will be saved in the specified output path.
-        :param output_path: The path where the GeoJSON files will be saved. Default is "data/output/geojson".
+        :param output_path: The path where the GeoJSON files will be saved. Default is "data/sum_gtfs_geojson/geojson".
         """
         Path(output_path).mkdir(parents=True, exist_ok=True)
 

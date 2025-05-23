@@ -4,16 +4,21 @@ from sum_gtfs_geojson.models import Stop, Route, StationInfoStatus, BikeTrip, Ri
 from sum_gtfs_geojson.enums import DataType
 from .abstract_loader import AbstractLoader
 import logging
+from importlib.resources import files
 
 logger = logging.getLogger(__name__)
 
-STOPS_FILE_PATH = "data/living_labs/geneva/gtfs/stops.txt"
-ROUTES_FILE_PATH = "data/living_labs/geneva/gtfs/routes.txt"
-TRIPS_FILE_PATH = "data/living_labs/geneva/gtfs/trips.txt"
-STOPTIMES_FILE_PATH = "data/living_labs/geneva/gtfs/stop_times.txt"
-BIKES_STOPS_FILEPATH = "data/living_labs/geneva/gbfs/shared_bikes_stations_2024.xlsx"
-RIDERSHIP_FILE_PATH = "data/living_labs/geneva/mobility/ridership_2024.csv"
-BIKE_TRIPS_FILE_PATH = "data/living_labs/geneva/mobility/shared_bikes_trips.csv"
+GTFS_DATA_PATH = "sum_gtfs_geojson.data.living_labs.geneva.gtfs"
+GBFS_DATA_PATH = "sum_gtfs_geojson.data.living_labs.geneva.gbfs"
+MOBILITY_DATA_PATH = "sum_gtfs_geojson.data.living_labs.geneva.mobility"
+
+STOPS_FILE_PATH = files(GTFS_DATA_PATH).joinpath('stops.txt')
+ROUTES_FILE_PATH = files(GTFS_DATA_PATH).joinpath("routes.txt")
+TRIPS_FILE_PATH = files(GTFS_DATA_PATH).joinpath("trips.txt")
+STOPTIMES_FILE_PATH = files(GTFS_DATA_PATH).joinpath("stop_times.txt")
+BIKES_STOPS_FILEPATH = files(GBFS_DATA_PATH).joinpath("shared_bikes_stations_2024.xlsx")
+RIDERSHIP_FILE_PATH = files(MOBILITY_DATA_PATH).joinpath("ridership_2024.csv")
+BIKE_TRIPS_FILE_PATH = files(MOBILITY_DATA_PATH).joinpath("shared_bikes_trips.csv")
 
 
 def safe_get(row, key, default=None, dtype=None):
@@ -52,7 +57,8 @@ class GenevaLoader(AbstractLoader):
 
     def __init__(self, restrict_country_boundaries: bool = True, distance_radius_km: float = None,
                  grid_resolution: int = 8):
-        super().__init__(self.COUNTRY_A3_CODE, restrict_country_boundaries, distance_radius_km, grid_resolution)
+        super().__init__(self.COUNTRY_A3_CODE, restrict_country_boundaries,
+                         distance_radius_km, grid_resolution)
 
     def load_stops(self):
         """ Load GTFS stops from the GTFS data file

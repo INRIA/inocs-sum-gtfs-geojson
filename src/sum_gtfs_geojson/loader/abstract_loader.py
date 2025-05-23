@@ -7,9 +7,9 @@ from shapely.geometry import Point
 from pathlib import Path
 from typing import List, Optional, Literal
 from sum_gtfs_geojson.utils import GeoToolkit
+from importlib.resources import files
 
-
-WORLD_COUNTRIES_FILE_PATH = "data/world/10m/ne_10m_admin_0_countries.shp"
+WORLD_COUNTRIES_FILE_PATH = files("sum_gtfs_geojson.data.world.10m").joinpath("ne_10m_admin_0_countries.shp")
 CRS_GEOGRAPHIC = "EPSG:4326"
 CRS_PROJECTED = "EPSG:3857"
 

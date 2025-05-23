@@ -3,7 +3,7 @@ from sum_gtfs_geojson.loader import GenevaLoader, AbstractLoader
 from sum_gtfs_geojson.models import UrbanMobilitySystem
 from typing import Optional
 
-DEFAULT_OUTPUT_JSON_FILES_PATH = "data/geojson/"
+DEFAULT_OUTPUT_JSON_FILES_PATH = "data/sum_gtfs_geojson/geojson/"
 DEFAULT_DATA_TYPES = [
     DataType.STOPS,
     DataType.ITINERARIES,
@@ -23,29 +23,31 @@ class SharedMobilityManager:
                  grid_resolution: Optional[int] = 8
                  ):
         """
-        Initialize the SharedMobilityManager with a specific city.        
+        Initialize the SharedMobilityManager with a specific city. The initialization will load the data for the specified city and data types.  
 
+        Data is instantiated in data object which is an instance of UrbanMobilitySystem.
         Args:
             city (LivingLabsCity, optional): The city for which to manage shared mobility data.. Defaults to LivingLabsCity.GENEVA.
             data_types (list[DataType], optional): List of data types to load. If None, all data types will be loaded. Defaults to None.
             geojson_output_path (str, optional): The path where the GeoJSON files will be saved. If None, a default path will be used data/geojson/{city_name}. Defaults to None.
             include_country_border_crossing (bool, optional): Flag to restrict to country data. Defaults to False, then the complete data will be loaded, including neighbor countries (when applicable).
             distance_radius_km (float, optional): The distance radius in kilometers for filtering data. Defaults to None.
-            grid_resolution (int, optional): Resolution of the grid, from 0 to 15. Defaults to 8 (~1 km width, edge length ~1.22 km).
+            grid_resolution (int, optional): Resolution of the grid, from 0 to 15. Defaults to 8 (~1 km width, edge length ~1.22 km). Will apply only if HEX_GRID is included in data_types.
         """
         self.city = city
         self.data_types = data_types
         self.restrict_country_boundaries = restrict_country_boundaries
         self.distance_radius_km = distance_radius_km
         self.grid_resolution = grid_resolution
-        self.loader = self.get_loader()
+        self.loader = self._get_loader()
         self.geojson_output_path = geojson_output_path if geojson_output_path is not None else self._get_default_geojson_path()
         self.data = self.loader.load_all_data(data_types)
 
-    def get_loader(self) -> AbstractLoader:
+    def _get_loader(self) -> AbstractLoader:
         """
         Get the appropriate loader for the specified city.
-        :return: An instance of the loader for the specified city.
+        Returns: 
+            An instance of the loader for the specified city.
         """
         if self.city == LivingLabsCity.GENEVA:
             return GenevaLoader(restrict_country_boundaries=self.restrict_country_boundaries,
@@ -57,11 +59,13 @@ class SharedMobilityManager:
                 f"Unsupported Living Lab: {self.city}, no values found for this city.")
         # Add more loaders for other cities as needed
 
-    def load_data(self, datatypes: list[DataType] = None) -> UrbanMobilitySystem:
+    def _load_data(self, datatypes: list[DataType] = None) -> UrbanMobilitySystem:
         """
         Load data for the specified city and data types.
-        :param datatypes: List of data types to load. If None, load all data types.
-        :return: An UrbanMobilitySystem object containing the loaded data.
+        Args: 
+            datatypes: List of data types to load. If None, load all data types.
+        Returns: 
+            An UrbanMobilitySystem object containing the loaded data.
         """
         self.data = self.loader.load_all_data(datatypes)
         return self.data
@@ -69,7 +73,8 @@ class SharedMobilityManager:
     def _get_default_geojson_path(self) -> str:
         """
         Get the default path for saving GeoJSON files.
-        :return: The default path for saving GeoJSON files. Value is "data/geojson/{city_name}".
+        Returns:
+            The default path for saving GeoJSON files. Value is "data/geojson/{city_name}".
         """
         city_name = str(self.city.name).lower()
         file_path = [DEFAULT_OUTPUT_JSON_FILES_PATH, city_name]
@@ -88,9 +93,25 @@ class SharedMobilityManager:
     def save_to_geojson(self, output_path: str = None):
         """
         Save the loaded data to GeoJSON files.
-        :param output_path: The path where the GeoJSON files will be saved.
+        Args:
+            output_path: The path where the GeoJSON files will be saved.
         """
         if output_path is None:
             output_path = self.geojson_output_path
         self.data.save_to_geojson(output_path)
         print(f"Data saved to {output_path} as GeoJSON files.")
+        
+    def get_data(self) -> UrbanMobilitySystem:
+        """
+        Get the loaded data.
+        Returns: 
+            The loaded UrbanMobilitySystem data.
+        """
+        return self.data
+    def get_loader(self) -> AbstractLoader:
+        """
+        Get the loader used to load the data.
+        Returns: 
+            The loader used to load the data.
+        """
+        return self.loader
