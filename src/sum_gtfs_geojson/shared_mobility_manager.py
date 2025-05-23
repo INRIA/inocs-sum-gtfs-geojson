@@ -32,7 +32,7 @@ class SharedMobilityManager:
             geojson_output_path (str, optional): The path where the GeoJSON files will be saved. If None, a default path will be used data/geojson/{city_name}. Defaults to None.
             include_country_border_crossing (bool, optional): Flag to restrict to country data. Defaults to False, then the complete data will be loaded, including neighbor countries (when applicable).
             distance_radius_km (float, optional): The distance radius in kilometers for filtering data. Defaults to None.
-            grid_resolution (int, optional): Resolution of the grid, from 0 to 15. Defaults to 8 (~1 km width, edge length ~1.22 km). Will apply only if HEX_GRID is included in data_types.
+            grid_resolution (int, optional): Resolution of the grid, from 0 to 15. Defaults to 8 (~1 km width, edge length ~1.22 km). Will apply only if HEX_GRID is included in data_types. Check H3 documentation for more details https://h3geo.org/docs/core-library/restable/
         """
         self.city = city
         self.data_types = data_types
